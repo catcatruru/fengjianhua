@@ -1,0 +1,247 @@
+server:
+  port: 8600
+  max-http-header-size: 200KB
+  error:
+    include-message: always
+spring:
+  profiles:
+    active: dev,local
+  application:
+    name: asset-service
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+    default-property-inclusion: non_null
+  web:
+    resources:
+      static-locations: file:./static,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/, classpath:/public/
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 1024
+    timeout: 20s
+    password: iot@cloud
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/jetlinks
+    username: postgres
+    password: jetlinks
+    pool:
+      max-size: 32
+      max-idle-time: 60s
+      max-life-time: 1m
+      acquire-retry: 3
+  #    properties:
+  #      preparedStatementCacheQueries: 100
+  codec:
+    max-in-memory-size: 100MB
+  reactor:
+    debug-agent:
+      enabled: true # 开启调试代理,在打印异常时将会生成调用踪栈信息
+  elasticsearch:
+    uris: localhost:9200
+    socket-timeout: 10s
+    connection-timeout: 15s
+    webclient:
+      max-in-memory-size: 100MB
+#    username:
+#    password:
+easyorm:
+  default-schema: public # 数据库默认的schema
+  dialect: postgres #数据库方言
+elasticsearch:
+  index:
+    default-strategy: time-by-month #默认es的索引按月进行分表
+    settings:
+      number-of-shards: 1 # es 分片数量，通常对应es集群节点数量
+      number-of-replicas: 0 # 副本数量
+#      options:
+#        lifecycle.name: lifecycle_name # 在kibana中配置的生命周期
+hsweb:
+  dict:
+    enum-packages: org.jetlinks
+  webflux:
+    response-wrapper:
+      enabled: true #开启响应包装器(将返回值包装为ResponseMessage)
+      excludes: # 这下包下的接口不包装
+        - org.springdoc
+  authorize:
+    auto-parse: true
+  cache:
+    type: redis
+    redis:
+      local-cache-type: guava
+jetlinks:
+  server-id: ${spring.application.name}:${server.port} #集群节点ID,不同集群节点请设置不同的ID
+  cluster:
+    id: ${jetlinks.server-id}
+    name: ${spring.application.name}
+    port: 1${server.port} # 集群通信通信本地端口
+    external-host: 127.0.0.1  #集群节点通信对外暴露的host,根据实际部署情况修改该参数
+    external-port: ${jetlinks.cluster.port} #集群节点通信对外暴露的端口
+    rpc-port: 2${server.port} # 集群节点本地RPC端口
+    rpc-external-host: ${jetlinks.cluster.external-host}  #集群节点RPC对外暴露host
+    rpc-external-port: 2${server.port} #集群节点RPC对外暴露端口
+    seeds:  #集群种子节点,集群时,配置为api网关节点的 external-host:external-port
+       - 127.0.0.1:18800
+  microservice:
+    discovery:
+      enabled: true # 开启平台内置的服务发现,需要设置jetlinks.cluster.seeds为网关服务以加入集群.
+    token:
+      jwt:
+        #用于解码jwt的公钥
+        decode-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIgLDKvGlDEedlBYEBdXUXZ3cq3hBCqYzqK9bsRV2n4htVQQZKM7vuKksxh3oGtGCEK8jYzcKe+xZrh7Dw5w5/ECAwEAAQ==
+  logging:
+    system:
+      context:
+        server: ${spring.application.name}
+  low-code:
+    internal:
+      extensions:
+        - id: reactiveSqlExecutor
+          name: "sql执行"
+          provider: ReactiveSqlExecutor
+        - id: dictionaryService
+          name: "字典服务"
+          provider: internal
+          configuration:
+            provider: dictionaryService
+        - id: areaObjectService
+          name: "地区服务"
+          provider: internal
+          configuration:
+            provider: areaObjectService
+        - id: geoObjectService
+          name: "地理位置"
+          provider: internal
+          configuration:
+            provider: geoObjectService
+        - id: workflowService
+          name: "流程服务"
+          provider: internal
+          configuration:
+            provider: workflowService
+        - id: configManager
+          name: "系统配置"
+          provider: configManager
+        - id: amsContractService
+          name: "合同"
+          provider: internal
+          configuration:
+            provider: amsContractService
+        - id: amsStatementService
+          name: "账单"
+          provider: internal
+          configuration:
+            provider: amsStatementService
+  auto-init:
+    enabled: true
+    strategy:
+      BuiltinAreaEntity.entity.json: fullIfNotExists
+  audit:
+    data-operation:
+      enabled: true
+      includes:
+        s_bulletin: [ "modifyTime","modifierId","createTime","creatorId","creatorName" ]
+        ams_contract: [ "modifyTime","modifierId","modifierName","createTime","creatorId","creatorName" ]
+        ams_asset_management: [ "modifyTime","modifierId","createTime","creatorId" ]
+rule:
+  engine:
+    server-id: ${jetlinks.server-id}
+    server-name: ${spring.application.name}
+logging:
+  level:
+    org.jetlinks: debug
+    rule.engine: debug
+    org.hswebframework: debug
+    org.springframework.transaction: debug
+    org.springframework.data.r2dbc.connectionfactory: warn
+    io.micrometer: warn
+    org.hswebframework.expands: error
+    system: debug
+    org.jetlinks.rule.engine: warn
+    org.jetlinks.supports.event: warn
+    org.springframework: warn
+    org.apache.kafka: warn
+    org.jetlinks.pro.device.message.writer: warn
+    org.jetlinks.pro.elastic.search.service: trace
+    org.jetlinks.pro.elastic.search.service.reactive: trace
+    org.jetlinks.pro.network: warn
+    org.jetlinks.supports: warn
+    #    org.springframework.data.elasticsearch.client: trace
+    #    org.elasticsearch: error
+    org.jetlinks.pro.influx: trace
+    org.elasticsearch.deprecation: off
+  #    org.elasticsearch: error
+  config: classpath:logback-spring.xml
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+springdoc:
+  group-configs:
+    - group: low-code
+      display-name: 低代码相关接口
+      packages-to-scan:
+        - org.jetlinks.pro.lowcode
+        - org.jetlinks.pro.workflow
+  cache:
+    disabled: false
+vertx:
+  max-event-loop-execute-time-unit: seconds
+  max-event-loop-execute-time: 30
+  max-worker-execute-time-unit: seconds
+  max-worker-execute-time: 30
+  prefer-native-transport: true
+micrometer:
+  time-series:
+    tags:
+      server: ${jetlinks.server-id}
+    metrics:
+      default:
+        step: 30s
+    ignore:
+      - jetlinks-metrics #忽略内部监控信息
+
+management:
+  metrics:
+    export:
+      simple:
+        enabled: false
+trace:
+  enabled: true
+  jaeger:
+    enabled: false
+    endpoint: "http://127.0.0.1:14250"
+  local-store:
+    enabled: true
+    max-store-time: 7d
+system:
+  config:
+    scopes:
+      - id: ocrConfig
+        name: ocr配置
+        public-access: false
+        properties:
+          - key: type
+            name: 类型
+            default-value: "baiduBce" # 默认百度ocr
+          - key: config
+            name: 配置
+            default-value: "{\"baseUrl\":\"https://aip.baidubce.com\",\"clientId\":\"8dFoFbWjRnRmhmuO42f8jv5F\",\"clientSecret\":\"pyR8DQjZspeR9kmiHgqlNGPp2c75vaWt\"}"
+asset:
+  contract:
+    related:
+      dictIds: [ "standard_internal_company","free_internal_company","supplier_internal_company" ]
+      lowCodeConfigs:
+        #客户
+        - id: consumer
+          projectId: manage_20231208
+          functionFullId: manage_20231208.BKp4rksymXBEi6XQ.fDjMSx6NARbjMGJk
+          nameProperty: tenant
+        #供应商
+        - id: supplier
+          projectId: manage_20231208
+          functionFullId: manage_20231208.BTAbePW5SBWK6SYP.QzmPnGPbdX7J7Cnh

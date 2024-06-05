@@ -1,0 +1,22 @@
+nacos:
+  server-addr: 127.0.0.1:8848
+  endpoint: ""
+  username: ""
+  password: ""
+  public-ip: ""
+  public-port: -1
+  zone: "${local.ip}"
+  namespace: ""
+#nacos:
+#  server-addr: nacos.cuiot.jetlinks.cn:80
+#  username: "jetlinks-dev"
+#  password: "p@ssw0rd"
+#  public-ip: "192-168-3-183-${server.port}.proxy.jetlinks.cn"
+#  public-port: 7010
+#  namespace: "dev"
+#  zone: zhouhao
+spring:
+  cloud:
+    nacos:
+      config:
+        enabled: false

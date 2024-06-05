@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="FileApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="file-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.jetlinks.ipms.file.FileApplication" />
+    <option name="VM_PARAMETERS" value="-Xms128M -Xmx512M" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

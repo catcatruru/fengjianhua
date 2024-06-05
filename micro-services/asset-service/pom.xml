@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.jetlinks.project</groupId>
+        <artifactId>intelligent-pms</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>asset-service</artifactId>
+
+    <name>资产管理服务</name>
+    <build>
+        <finalName>application</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>org.jetlinks.ipms.ams.AssetApplication</mainClass>
+                    <layout>ZIP</layout>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>x86_64</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+
+                <dependency>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-epoll</artifactId>
+                    <classifier>linux-x86_64</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-kqueue</artifactId>
+                    <classifier>osx-x86_64</classifier>
+                </dependency>
+
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>aarch64</id>
+            <dependencies>
+                <dependency>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-epoll</artifactId>
+                    <classifier>linux-aarch_64</classifier>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>java11</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle.database.r2dbc</groupId>
+                    <artifactId>oracle-r2dbc</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>cassandra</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jetlinks.pro</groupId>
+                    <artifactId>cassandra-component</artifactId>
+                    <version>${jetlinks.pro.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>influxdb</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jetlinks.pro</groupId>
+                    <artifactId>influxdb-component</artifactId>
+                    <version>${jetlinks.pro.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>clickhouse</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jetlinks.pro</groupId>
+                    <artifactId>clickhouse-component</artifactId>
+                    <version>${jetlinks.pro.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>jetlinks-ams</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>microservice-dependencies</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>microservice-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>workflow-internal</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>low-code-internal</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>low-code-runtime</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>logging-manager</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hswebframework.web</groupId>
+            <artifactId>hsweb-system-dictionary</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>datasource-manager</artifactId>
+            <version>${jetlinks.pro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetlinks.pro</groupId>
+            <artifactId>notify-manager</artifactId>
+        </dependency>
+
+
+    </dependencies>
+</project>

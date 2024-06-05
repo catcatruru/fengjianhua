@@ -1,0 +1,12 @@
+[submodule "modules/jetlinks-media"]
+	path = modules/jetlinks-media
+	url = git@github.com:jetlinks-v2/jetlinks-media.git
+[submodule "modules/jetlinks-elms"]
+	path = modules/jetlinks-elms
+	url = git@github.com:jetlinks-v2/jetlinks-elms.git
+[submodule "modules/jetlinks-ams"]
+	path = modules/jetlinks-ams
+	url = git@github.com:jetlinks-v2/jetlinks-ams.git
+[submodule "modules/jetlinks-subsystem"]
+	path = modules/jetlinks-subsystem
+	url = git@github.com:jetlinks-v2/jetlinks-subsystem.git

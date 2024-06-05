@@ -1,0 +1,37 @@
+nacos:
+  server-addr: 127.0.0.1:8848
+  endpoint: ""
+  username: ""
+  password: ""
+  public-ip: ""
+  public-port: -1
+  zone: "${local.ip}"
+  namespace: ""
+spring:
+  profiles:
+    active: dev,local
+  cloud:
+    nacos:
+      bootstrap:
+        enabled: true
+      discovery:
+        enabled: true
+        server-addr: ${nacos.server-addr}
+        register-enabled: true
+        watch-delay: 2000
+        username: ${nacos.username}
+        password: ${nacos.password}
+        port: ${nacos.public-port}
+        ip: ${nacos.public-ip}
+        metadata:
+          zone: ${nacos.zone}
+        namespace: ${nacos.namespace}
+      config:
+        enabled: true
+        server-addr: ${nacos.server-addr}
+        username: ${nacos.username}
+        password: ${nacos.password}
+        shared-configs:
+          - dataId: db-config.yml
+        file-extension: yml
+        namespace: ${nacos.namespace}

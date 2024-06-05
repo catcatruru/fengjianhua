@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SubsystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="subsystem-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.jetlinks.ipms.subsystem.SubsystemApplication" />
+    <option name="VM_PARAMETERS" value="-Xms256M -Xmx1G" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
